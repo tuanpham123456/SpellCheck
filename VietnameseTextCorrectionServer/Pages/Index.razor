@@ -1,0 +1,30 @@
+﻿@page "/"
+@inject VietnameseTextCorrectionServer.Interfaces.ITextProcessingService TextProcessingService
+
+<h3>Chỉnh Sửa Văn Bản Tiếng Việt</h3>
+
+<textarea @bind="inputText" rows="10" class="form-control"></textarea>
+<button class="btn btn-primary mt-2" @onclick="ProcessText">Xử Lý</button>
+
+@if (isProcessing)
+{
+    <p>Đang xử lý...</p>
+}
+else if (!string.IsNullOrEmpty(resultText))
+{
+    <h4>Kết Quả:</h4>
+    <div class="alert alert-success">@resultText</div>
+}
+
+@code {
+    private string inputText = string.Empty;
+    private string resultText = string.Empty;
+    private bool isProcessing = false;
+
+    private async Task ProcessText()
+    {
+        isProcessing = true;
+        resultText = await TextProcessingService.ProcessAsync(inputText);
+        isProcessing = false;
+    }
+}
